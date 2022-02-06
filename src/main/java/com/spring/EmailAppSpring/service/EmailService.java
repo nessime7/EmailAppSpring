@@ -18,12 +18,16 @@ public class EmailService {
         this.repository = repository;
     }
 
-    public Company addCompany(Company company) {
+    public Company addCompany(CompanyRequest companyRequest) {
+        final var company = new Company(UUID.randomUUID(), companyRequest.getName(), companyRequest.getWebsite());
+
         repository.getCompanies().add(company);
         return company;
     }
 
-    public Company putDepartment(UUID companyId, Department department) {
+    public Company putDepartment(UUID companyId, DepartmentRequest departmentRequest) {
+        final var department = new Department(UUID.randomUUID(), departmentRequest.getName(), departmentRequest.getBudget());
+
         return repository.getCompanies().stream()
                 .filter(company -> company.getCompanyId().equals(companyId))
                 .peek(company -> company.addDepartment(department))
@@ -31,7 +35,9 @@ public class EmailService {
                 .orElseThrow();
     }
 
-    public Department putManager(UUID companyId, UUID departmentId, Manager manager) {
+    public Department putManager(UUID companyId, UUID departmentId, ManagerRequest managerRequest) {
+        final var manager = new Manager(UUID.randomUUID(), managerRequest.getFirstName(), managerRequest.getLastName());
+
         return repository.getCompanies().stream()
                 .filter(company -> company.getCompanyId().equals(companyId))
                 .flatMap(department -> department.getDepartments().stream())
@@ -41,7 +47,9 @@ public class EmailService {
                 .orElseThrow();
     }
 
-    public Manager putEmployee(UUID companyId, UUID departmentId, UUID managerId, Employee employee) {
+    public Manager putEmployee(UUID companyId, UUID departmentId, UUID managerId, EmployeeRequest employeeRequest) {
+        final var employee = new Employee(employeeRequest.getFirstName(), employeeRequest.getLastName());
+
         return repository.getCompanies().stream()
                 .filter(company -> company.getCompanyId().equals(companyId))
                 .flatMap(department -> department.getDepartments().stream())

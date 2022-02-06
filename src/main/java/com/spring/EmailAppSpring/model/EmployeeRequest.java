@@ -2,22 +2,13 @@ package com.spring.EmailAppSpring.model;
 
 import java.util.Objects;
 
-public class Employee {
+public class EmployeeRequest {
 
     private String firstName;
     private String lastName;
-    private Email email;
 
-    public Employee(String firstName, String lastName, Email email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-    }
 
-    public Employee() {
-    }
-
-    public Employee(String firstName, String lastName) {
+    public EmployeeRequest(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -38,13 +29,11 @@ public class Employee {
         this.lastName = lastName;
     }
 
-
     @Override
     public String toString() {
-        return "Employee{" +
+        return "EmployeeRequest{" +
                 "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", email=" + email +
                 '}';
     }
 
@@ -52,8 +41,8 @@ public class Employee {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Employee employee = (Employee) o;
-        return Objects.equals(firstName, employee.firstName) && Objects.equals(lastName, employee.lastName);
+        EmployeeRequest that = (EmployeeRequest) o;
+        return Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName);
     }
 
     @Override

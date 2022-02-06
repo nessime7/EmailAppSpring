@@ -1,18 +1,14 @@
 package com.spring.EmailAppSpring.controller;
 
-import com.spring.EmailAppSpring.model.Company;
-import com.spring.EmailAppSpring.model.Department;
-import com.spring.EmailAppSpring.model.Employee;
-import com.spring.EmailAppSpring.model.Manager;
+import com.spring.EmailAppSpring.model.*;
 import com.spring.EmailAppSpring.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 import java.util.UUID;
 
-@Controller
+@RestController
 public class EmailAppController {
 
     private final EmailService emailService;
@@ -23,25 +19,25 @@ public class EmailAppController {
     }
 
     @PostMapping("companies")
-    public Company addCompany(Company company) {
-        return emailService.addCompany(company);
+    public Company addCompany(@RequestBody CompanyRequest companyRequest) {
+        return emailService.addCompany(companyRequest);
     }
 
     @PutMapping("companies/{companyId}")
-    public Company putDepartment(@PathVariable ("companyId") UUID companyId, @RequestBody Department department) {
-        return emailService.putDepartment(companyId, department);
+    public Company putDepartment(@PathVariable ("companyId") UUID companyId, @RequestBody DepartmentRequest departmentRequest) {
+        return emailService.putDepartment(companyId, departmentRequest);
     }
 
     @PutMapping("companies/{companyId}/{departmentId}")
     public Department putManager(@PathVariable ("companyId") UUID companyId,
-                              @PathVariable ("departmentId") UUID departmentId, @RequestBody Manager manager) {
-        return emailService.putManager(companyId, departmentId, manager);
+                              @PathVariable ("departmentId") UUID departmentId, @RequestBody ManagerRequest managerRequest) {
+        return emailService.putManager(companyId, departmentId, managerRequest);
     }
 
     @PutMapping("companies/{companyId}/{departmentId}/{managerId}")
     public Employee putEmployee(@PathVariable ("companyId") UUID companyId, @PathVariable ("departmentId") UUID departmentId,
-                                @PathVariable ("mangerId") UUID managerId, @RequestBody Employee employee) {
-        return emailService.putEmployee(companyId, departmentId, managerId, employee);
+                                @PathVariable ("mangerId") UUID managerId, @RequestBody EmployeeRequest employeeRequest) {
+        return emailService.putEmployee(companyId, departmentId, managerId, employeeRequest);
     }
 
     @GetMapping("companies/{companyId}")
