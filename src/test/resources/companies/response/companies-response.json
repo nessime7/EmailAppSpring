@@ -1,0 +1,27 @@
+[
+  {
+    "companyId": "b7049455-e4b4-42ba-889d-a3d08e9c0eca",
+    "name": "TestCompany",
+    "website": "www.company.test",
+    "departments": [
+      {
+        "departmentId": "b48b862e-6a85-11ec-90d6-0242ac120003",
+        "name": "TestOffice",
+        "budget": 10000,
+        "managers": [
+          {
+            "firstName": "TestManager",
+            "lastName": "TestManagerski",
+            "managerId": "1c0d10a6-6b03-11ec-90d6-0242ac120003",
+            "employees": [
+              {
+                "firstName": "TestEmployee",
+                "lastName": "TestEmployeeski"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
