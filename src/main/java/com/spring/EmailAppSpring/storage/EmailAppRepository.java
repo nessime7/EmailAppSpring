@@ -12,13 +12,13 @@ import java.util.UUID;
 public class EmailAppRepository {
 
     private Set<Company> companies = new HashSet<>(Set.of(
-            new Company(UUID.fromString("b7049455-e4b4-42ba-889d-a3d08e9c0eca"), "Test Company", "www.company.test",
+            new Company(UUID.fromString("b7049455-e4b4-42ba-889d-a3d08e9c0eca"), "TestCompany", "www.company.test",
                     new HashSet<>(Set.of(new Department(UUID.fromString("b48b862e-6a85-11ec-90d6-0242ac120003"),
                             "TestOffice", 10000,
                             new HashSet<>(Set.of(new Manager(UUID.fromString("1c0d10a6-6b03-11ec-90d6-0242ac120003"),
-                                    "Adam", "Adamowski", new Email("Adam.Adamowski@test.com", "1234"),
-                                    new HashSet<>(Set.of(new Employee("Jan", "Kowalski",
-                                            new Email("Jan.Kowalski@test.com", "1234"))
+                                    "TestManager", "TestManagerski", new Email("testmanager@test.com", "1234"),
+                                    new HashSet<>(Set.of(new Employee("TestEmployee", "TestEmployeeski",
+                                            new Email("testemployee@test.com", "1234"))
                                     )))))))))));
 
     public Set<Company> getCompanies() {

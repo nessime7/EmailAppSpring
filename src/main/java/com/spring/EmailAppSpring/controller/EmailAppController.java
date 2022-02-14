@@ -36,7 +36,7 @@ public class EmailAppController {
 
     @PutMapping("companies/{companyId}/{departmentId}/{managerId}")
     public Employee putEmployee(@PathVariable ("companyId") UUID companyId, @PathVariable ("departmentId") UUID departmentId,
-                                @PathVariable ("mangerId") UUID managerId, @RequestBody EmployeeRequest employeeRequest) {
+                                @PathVariable ("managerId") UUID managerId, @RequestBody EmployeeRequest employeeRequest) {
         return emailService.putEmployee(companyId, departmentId, managerId, employeeRequest);
     }
 
