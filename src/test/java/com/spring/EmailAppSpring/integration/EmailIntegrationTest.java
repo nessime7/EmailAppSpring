@@ -129,4 +129,14 @@ public class EmailIntegrationTest {
                 .and().body("employees.lastName", hasItem("Nowak"));
     }
 
+    @Test
+    public void should_add_new_department_and_return_404() throws IOException {
+        var companyId = "ab391196-93dd-11ec-b909-0242ac120002";
+        given().contentType(ContentType.JSON)
+                .body(TestUtils.getRequestBodyFromFile("request/add-new-department-request.json", CONTEXT))
+                .when().put( String.format("/companies/%s", companyId))
+                .then()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
 }

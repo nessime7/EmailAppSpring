@@ -28,12 +28,22 @@ public class EmailService {
     public Company putDepartment(UUID companyId, DepartmentRequest departmentRequest) {
         final var department = new Department(UUID.randomUUID(), departmentRequest.getName(), departmentRequest.getBudget());
 
-        return repository.getCompanies().stream()
-                .filter(company -> company.getCompanyId().equals(companyId))
-                .peek(company -> company.addDepartment(department))
-                .findFirst()
-                .orElseThrow();
+//        return repository.getCompanies().stream()
+//                .filter(company -> company.getCompanyId().equals(companyId))
+//                .peek(company -> company.addDepartment(department))
+//                .findFirst()
+//                .orElseThrow();
+
+        for (Company company: repository.getCompanies()) {
+            if (company.getCompanyId().equals(companyId)){
+                company.addDepartment(department);
+                return company;
+            }
+        }
+        throw new IllegalStateException();
     }
+
+
 
     public Department putManager(UUID companyId, UUID departmentId, ManagerRequest managerRequest) {
         final var manager = new Manager(UUID.randomUUID(), managerRequest.getFirstName(), managerRequest.getLastName());
