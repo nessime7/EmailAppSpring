@@ -1,48 +1,44 @@
 package com.spring.EmailAppSpring.model;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
 
-public class ManagerRequest extends Employee {
+public class ManagerRequest {
 
-    private UUID managerId;
-    public Set<Employee> employees = new HashSet<>();
+    private String firstName;
+    private String lastName;
 
     public ManagerRequest(String firstName, String lastName) {
-        super(firstName, lastName);
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
-    public ManagerRequest(Set<Employee> employees) {
-        this.employees = employees;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public Set<Employee> getEmployees() {
-        return employees;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    @Override
-    public String toString() {
-        return "Manager{" +
-                "managerId=" + managerId +
-                ", " + super.toString() +
-                ", employees=" + employees +
-                "}";
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        ManagerRequest manager = (ManagerRequest) o;
-        return Objects.equals(managerId, manager.managerId) && Objects.equals(employees, manager.employees);
+        ManagerRequest that = (ManagerRequest) o;
+        return Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), managerId, employees);
+        return Objects.hash(firstName, lastName);
     }
 
 }

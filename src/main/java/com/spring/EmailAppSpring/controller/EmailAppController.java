@@ -5,7 +5,7 @@ import com.spring.EmailAppSpring.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,41 +24,39 @@ public class EmailAppController {
     }
 
     @PutMapping("companies/{companyId}")
-    public Company putDepartment(@PathVariable ("companyId") UUID companyId, @RequestBody DepartmentRequest departmentRequest) {
-        return emailService.putDepartment(companyId, departmentRequest);
+    public Company addDepartment(@PathVariable ("companyId") UUID companyId, @RequestBody DepartmentRequest departmentRequest) {
+        return emailService.addDepartment(companyId, departmentRequest);
     }
 
-    @PutMapping("companies/{companyId}/{departmentId}")
-    public Department putManager(@PathVariable ("companyId") UUID companyId,
-                              @PathVariable ("departmentId") UUID departmentId, @RequestBody ManagerRequest managerRequest) {
-        return emailService.putManager(companyId, departmentId, managerRequest);
+    @PutMapping("companies/{departmentId}")
+    public Department addManager(@PathVariable ("departmentId") UUID departmentId, @RequestBody ManagerRequest managerRequest) {
+        return emailService.addManager(departmentId, managerRequest);
     }
 
-    @PutMapping("companies/{companyId}/{departmentId}/{managerId}")
-    public Employee putEmployee(@PathVariable ("companyId") UUID companyId, @PathVariable ("departmentId") UUID departmentId,
-                                @PathVariable ("managerId") UUID managerId, @RequestBody EmployeeRequest employeeRequest) {
-        return emailService.putEmployee(companyId, departmentId, managerId, employeeRequest);
-    }
-
-    @GetMapping("companies/{companyId}")
-    public Company getAllCompanies(@PathVariable ("companyId") UUID companyId) {
-        return emailService.getAllCompanies(companyId);
+    @PutMapping("companies/{managerId}")
+    public Manager addEmployee(@PathVariable ("managerId") UUID managerId, @RequestBody EmployeeRequest employeeRequest) {
+        return emailService.addEmployee(managerId, employeeRequest);
     }
 
     @GetMapping("companies")
-    public Set<Company> getCompany() {
-        return emailService.getCompany();
+    public List<Company> getAllCompanies() {
+        return emailService.getAllCompanies();
     }
 
-    @GetMapping("companies/{companyId}/{departmentId}")
-    public void getDepartment(@PathVariable ("companyId") UUID companyId, @PathVariable ("departmentId") UUID departmentId) {
-        emailService.getDepartment(companyId, departmentId);
-    }
-
-    @GetMapping("companies/{companyId}/{departmentId}/{managerId}")
-    public void getManager(@PathVariable ("companyId") UUID companyId, @PathVariable ("departmentId") UUID departmentId,
-                              @PathVariable ("mangerId") UUID managerId) {
-        emailService.getManager(companyId, departmentId, managerId);
-    }
+//    @GetMapping("companies")
+//    public Set<Company> getCompany() {
+//        return emailService.getCompany();
+//    }
+//
+//    @GetMapping("companies/{companyId}/{departmentId}")
+//    public void getDepartment(@PathVariable ("companyId") UUID companyId, @PathVariable ("departmentId") UUID departmentId) {
+//        emailService.getDepartment(companyId, departmentId);
+//    }
+//
+//    @GetMapping("companies/{companyId}/{departmentId}/{managerId}")
+//    public void getManager(@PathVariable ("companyId") UUID companyId, @PathVariable ("departmentId") UUID departmentId,
+//                              @PathVariable ("mangerId") UUID managerId) {
+//        emailService.getManager(companyId, departmentId, managerId);
+//    }
 
 }

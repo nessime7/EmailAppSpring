@@ -17,12 +17,19 @@ public class Department {
     @Id
     @GeneratedValue(generator = "UUID")
     @Column(name = "id", nullable = false)
-    private UUID departmentId;
+    private UUID id;
 
-    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "budget", nullable = false)
     private int budget;
+
+    @ManyToOne
+    private Company company;
+
+    public Department(String name, int budget, Company company) {
+        this.name = name;
+        this.budget = budget;
+        this.company = company;
+    }
 
 }

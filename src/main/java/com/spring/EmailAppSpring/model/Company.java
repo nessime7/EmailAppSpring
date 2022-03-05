@@ -9,6 +9,8 @@ import java.util.UUID;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@ToString
 @Table(name = "company")
 public class Company {
 
@@ -17,11 +19,15 @@ public class Company {
     @Column(name = "id", nullable = false)
     private UUID id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "website")
     private String website;
+
+
+    public Company(String name, String website) {
+        this.name = name;
+        this.website = website;
+    }
 
 }
 

@@ -19,11 +19,18 @@ public class Manager {
     @Column(name = "id", nullable = false)
     private UUID managerId;
 
-    @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false)
     private String lastName;
+
+    @ManyToOne
+    private Department department;
+
+    public Manager(String firstName, String lastName, Department department) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.department = department;
+    }
 
 }
 
