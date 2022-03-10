@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -19,8 +20,6 @@ public class EmailService {
     private final ManagerRepository managerRepository;
     private final EmployeeRepository employeeRepository;
 
-
-
     @Autowired
     public EmailService(CompanyRepository companyRepository, DepartmentRepository departmentRepository, ManagerRepository managerRepository, EmployeeRepository employeeRepository) {
         this.companyRepository = companyRepository;
@@ -29,65 +28,55 @@ public class EmailService {
         this.employeeRepository = employeeRepository;
     }
 
+    public List<Company> getAllCompanies() {
+        return companyRepository.findAll();
+    }
+
+    public Optional<Company> getCompany(UUID companyId) {
+        return companyRepository.findById(companyId);
+    }
+
+    public Optional<Department> getDepartment(UUID departmentId) {
+        return departmentRepository.findById(departmentId);
+    }
+
+    public Optional<Manager> getManager(UUID managerId) {
+        return managerRepository.findById(managerId);
+    }
+
     public Company addCompany(CompanyRequest companyRequest) {
         final var company = new Company(companyRequest.getName(), companyRequest.getWebsite());
         companyRepository.save(company);
         return company;
     }
 
-    public Company addDepartment(UUID companyId, DepartmentRequest departmentRequest) {
-        final var company = companyRepository.getById(companyId);
+    public Department addDepartment(UUID companyId, DepartmentRequest departmentRequest) {
+        final var company = companyRepository.findById(companyId).get();
         final var department = new Department(departmentRequest.getName(), departmentRequest.getBudget(), company);
         departmentRepository.save(department);
-        return company;
-    }
-
-
-    public Department addManager(UUID departmentId, ManagerRequest managerRequest) {
-        final var department = departmentRepository.getById(departmentId);
-        final var manager = new Manager(managerRequest.getFirstName(), managerRequest.getLastName(), department);
-        managerRepository.save(manager);
         return department;
     }
 
-    public Manager addEmployee(UUID managerId, EmployeeRequest employeeRequest) {
-        final var manager = managerRepository.getById(managerId);
-        final var employee = new Employee(employeeRequest.getFirstName(), employeeRequest.getLastName());
-        employeeRepository.save(employee);
+    public Manager addManager(UUID departmentId, ManagerRequest managerRequest) {
+        final var department = departmentRepository.findById(departmentId).get();
+        final var manager = new Manager(managerRequest.getFirstName(), managerRequest.getLastName(), department);
+        managerRepository.save(manager);
         return manager;
     }
 
-    public List<Company> getAllCompanies() {
-        return companyRepository.findAll();
+    public Employee addEmployee(UUID managerId, EmployeeRequest employeeRequest) {
+        final var manager = managerRepository.findById(managerId).get();
+        final var employee = new Employee(employeeRequest.getFirstName(), employeeRequest.getLastName());
+        employeeRepository.save(employee);
+        return employee;
+    }
+    
+    public String generateMail(String firstName, String lastName) {
+        return firstName + "." + lastName + "@company.com";
     }
 
-//    public Set<Company> getCompany() {
-//        return repository.getCompanies();
-//    }
-//    public void getDepartment(UUID companyId, UUID departmentId) {
-//        repository.getCompanies().stream()
-//                .filter(company -> company.getCompanyId().equals(companyId))
-//                .flatMap(department -> department.getDepartments().stream())
-//                .filter(department -> department.getDepartmentId().equals(departmentId))
-//                .forEach(System.out::println);
-//    }
-//
-//    public void getManager(UUID companyId, UUID departmentId, UUID managerId) {
-//        repository.getCompanies().stream()
-//                .filter(company -> company.getCompanyId().equals(companyId))
-//                .flatMap(department -> department.getDepartments().stream())
-//                .filter(department -> department.getDepartmentId().equals(departmentId))
-//                .flatMap(department -> department.getManagers().stream())
-//                .filter(department -> department.getManagerId().equals(managerId))
-//                .forEach(System.out::println);
-//    }
-//
-//    public String generateMail(String firstName, String lastName) {
-//        return firstName + "." + lastName + "@company.com";
-//    }
-//
-//    public String generatePassword() {
-//        return UUID.randomUUID().toString();
-//    }
+    public String generatePassword() {
+        return UUID.randomUUID().toString();
+    }
 
 }
