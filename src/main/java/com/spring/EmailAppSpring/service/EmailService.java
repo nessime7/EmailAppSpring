@@ -70,7 +70,99 @@ public class EmailService {
         employeeRepository.save(employee);
         return employee;
     }
-    
+
+    public Company patchCompany(UUID companyId, CompanyRequest companyRequest) {
+        final var company = companyRepository.findById(companyId).get();
+        if (companyRequest.getWebsite() == null) {
+            company.setName(companyRequest.getName());
+        }
+        else if (companyRequest.getName() == null) {
+            company.setWebsite(companyRequest.getWebsite());
+        }
+        else if (companyRequest.getName() == null && companyRequest.getWebsite() == null) {
+            System.out.println("Brak danych!");
+        }
+        else {
+            company.setName(companyRequest.getName());
+            company.setWebsite(companyRequest.getWebsite());
+        }
+        return companyRepository.save(company);
+    }
+
+    public Department patchDepartment(UUID departmentId, DepartmentRequest departmentRequest) {
+        final var department = departmentRepository.findById(departmentId).get();
+        if (departmentRequest.getBudget() == 0) {
+            department.setName(departmentRequest.getName());
+        }
+        else if (departmentRequest.getName() == null) {
+            department.setBudget(department.getBudget());
+        }
+        else if (departmentRequest.getName() == null && departmentRequest.getBudget() == 0) {
+            System.out.println("Brak danych!");
+        }
+        else {
+            department.setName(departmentRequest.getName());
+            department.setBudget(departmentRequest.getBudget());
+        }
+        return departmentRepository.save(department);
+    }
+
+    public Manager patchManager(UUID managerId, ManagerRequest managerRequest) {
+        final var manager = managerRepository.findById(managerId).get();
+        if (managerRequest.getLastName() == null) {
+            manager.setFirstName(managerRequest.getFirstName());
+        }
+        else if (managerRequest.getFirstName() == null) {
+            manager.setLastName(managerRequest.getLastName());
+        }
+        else if (managerRequest.getFirstName() == null && managerRequest.getLastName() == null) {
+            System.out.println("Brak danych!");
+        }
+        else {
+            manager.setFirstName(managerRequest.getFirstName());
+            manager.setLastName(managerRequest.getLastName());
+        }
+        return managerRepository.save(manager);
+    }
+
+    public Employee patchEmployee(UUID employeeId, EmployeeRequest employeeRequest) {
+        final var employee = employeeRepository.findById(employeeId).get();
+        if (employeeRequest.getLastName() == null) {
+            employee.setFirstName(employeeRequest.getFirstName());
+        }
+        else if (employeeRequest.getFirstName() == null) {
+            employee.setLastName(employeeRequest.getLastName());
+        }
+        else if (employeeRequest.getFirstName() == null && employeeRequest.getLastName() == null) {
+            System.out.println("Brak danych!");
+        }
+        else {
+            employee.setFirstName(employeeRequest.getFirstName());
+            employee.setLastName(employeeRequest.getLastName());
+        }
+        return employeeRepository.save(employee);
+    }
+
+    public void deleteCompany(UUID companyId) {
+        final var company = companyRepository.findById(companyId).get();
+        companyRepository.delete(company);
+    }
+
+    public void deleteDepartment(UUID departmentId) {
+        final var department = departmentRepository.findById(departmentId).get();
+        departmentRepository.delete(department);
+    }
+
+    public void deleteManager(UUID managerId) {
+        final var manager = managerRepository.findById(managerId).get();
+        managerRepository.delete(manager);
+    }
+
+    public void deleteEmployee(UUID employeeId) {
+        final var employee = employeeRepository.findById(employeeId).get();
+        employeeRepository.delete(employee);
+    }
+
     public String generateMail(String firstName, String lastName) {
         return firstName + "." + lastName + "@company.com";
     }

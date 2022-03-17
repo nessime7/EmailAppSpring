@@ -60,4 +60,44 @@ public class EmailAppController {
         return emailService.addEmployee(managerId, employeeRequest);
     }
 
+    @PatchMapping("companies/{companyId}")
+    public Company patchCompany(@PathVariable ("companyId") UUID companyId, @RequestBody CompanyRequest companyRequest) {
+        return emailService.patchCompany(companyId, companyRequest);
+    }
+
+    @PatchMapping("departments/{departmentId}")
+    public Department patchDepartment(@PathVariable ("departmentId") UUID departmentId, @RequestBody DepartmentRequest departmentRequest) {
+        return emailService.patchDepartment(departmentId, departmentRequest);
+    }
+
+    @PatchMapping("managers/{managerId}")
+    public Manager patchManager(@PathVariable ("managerId") UUID managerId, @RequestBody ManagerRequest managerRequest) {
+        return emailService.patchManager(managerId, managerRequest);
+    }
+
+    @PatchMapping("employees/{employeeId}")
+    public Employee patchEmployee(@PathVariable ("employeeId") UUID employeeId, @RequestBody EmployeeRequest employeeRequest) {
+        return emailService.patchEmployee(employeeId, employeeRequest);
+    }
+
+    @DeleteMapping("companies/{companyId}")
+    public void deleteCompany(@PathVariable ("companyId") UUID companyId) {
+        emailService.deleteCompany(companyId);
+    }
+
+    @DeleteMapping("departments/{departmentId}")
+    public void deleteDepartment(@PathVariable ("departmentId") UUID departmentId) {
+        emailService.deleteDepartment(departmentId);
+    }
+
+    @DeleteMapping("managers/{managerId}")
+    public void deleteManager(@PathVariable ("managerId") UUID managerId) {
+        emailService.deleteManager(managerId);
+    }
+
+    @DeleteMapping("employees/{employeeId}")
+    public void deleteEmployee(@PathVariable ("employeeId") UUID employeeId) {
+        emailService.deleteEmployee(employeeId);
+    }
+
 }
