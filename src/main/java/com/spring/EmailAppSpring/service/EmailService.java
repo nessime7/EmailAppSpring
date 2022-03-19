@@ -47,28 +47,37 @@ public class EmailService {
     public Company addCompany(CompanyRequest companyRequest) {
         final var company = new Company(companyRequest.getName(), companyRequest.getWebsite());
         companyRepository.save(company);
-        return company;
+            return company;
     }
 
     public Department addDepartment(UUID companyId, DepartmentRequest departmentRequest) {
         final var company = companyRepository.findById(companyId).get();
         final var department = new Department(departmentRequest.getName(), departmentRequest.getBudget(), company);
-        departmentRepository.save(department);
-        return department;
+        if (company.getId().equals(companyId)) {
+            departmentRepository.save(department);
+            return department;
+        }
+        throw new IllegalStateException();
     }
 
     public Manager addManager(UUID departmentId, ManagerRequest managerRequest) {
         final var department = departmentRepository.findById(departmentId).get();
         final var manager = new Manager(managerRequest.getFirstName(), managerRequest.getLastName(), department);
-        managerRepository.save(manager);
-        return manager;
+        if (department.getId().equals(departmentId)) {
+            managerRepository.save(manager);
+            return manager;
+        }
+        throw new IllegalStateException();
     }
 
     public Employee addEmployee(UUID managerId, EmployeeRequest employeeRequest) {
         final var manager = managerRepository.findById(managerId).get();
         final var employee = new Employee(employeeRequest.getFirstName(), employeeRequest.getLastName());
-        employeeRepository.save(employee);
-        return employee;
+        if (manager.getManagerId().equals(managerId)) {
+            employeeRepository.save(employee);
+            return employee;
+        }
+        throw new IllegalStateException();
     }
 
     public Company patchCompany(UUID companyId, CompanyRequest companyRequest) {
