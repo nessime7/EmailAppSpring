@@ -5,18 +5,14 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import java.util.NoSuchElementException;
 
 @ControllerAdvice
-public class ResponseExceptionHandler
-    extends ResponseEntityExceptionHandler {
+public class IdNotFoundAdvice {
 
     @ResponseBody
-    @ExceptionHandler(NoSuchElementException.class)
+    @ExceptionHandler(IdNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String response(NoSuchElementException exception) {
+    public String IdNotFoundResponse (IdNotFoundException exception) {
         return exception.getMessage();
     }
 }

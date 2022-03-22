@@ -1,5 +1,6 @@
 package com.spring.EmailAppSpring.service;
 
+import com.spring.EmailAppSpring.config.IdNotFoundException;
 import com.spring.EmailAppSpring.model.*;
 import com.spring.EmailAppSpring.repository.CompanyRepository;
 import com.spring.EmailAppSpring.repository.DepartmentRepository;
@@ -51,37 +52,28 @@ public class EmailService {
     }
 
     public Department addDepartment(UUID companyId, DepartmentRequest departmentRequest) {
-        final var company = companyRepository.findById(companyId).get();
+        final var company = companyRepository.findById(companyId).orElseThrow(() -> new IdNotFoundException());
         final var department = new Department(departmentRequest.getName(), departmentRequest.getBudget(), company);
-        if (company.getId().equals(companyId)) {
             departmentRepository.save(department);
             return department;
-        }
-        throw new IllegalStateException();
     }
 
     public Manager addManager(UUID departmentId, ManagerRequest managerRequest) {
-        final var department = departmentRepository.findById(departmentId).get();
+        final var department = departmentRepository.findById(departmentId).orElseThrow(() -> new IdNotFoundException());
         final var manager = new Manager(managerRequest.getFirstName(), managerRequest.getLastName(), department);
-        if (department.getId().equals(departmentId)) {
             managerRepository.save(manager);
             return manager;
-        }
-        throw new IllegalStateException();
     }
 
     public Employee addEmployee(UUID managerId, EmployeeRequest employeeRequest) {
-        final var manager = managerRepository.findById(managerId).get();
+        final var manager = managerRepository.findById(managerId).orElseThrow(() -> new IdNotFoundException());
         final var employee = new Employee(employeeRequest.getFirstName(), employeeRequest.getLastName());
-        if (manager.getManagerId().equals(managerId)) {
             employeeRepository.save(employee);
             return employee;
-        }
-        throw new IllegalStateException();
     }
 
     public Company patchCompany(UUID companyId, CompanyRequest companyRequest) {
-        final var company = companyRepository.findById(companyId).get();
+        final var company = companyRepository.findById(companyId).orElseThrow(() -> new IdNotFoundException());
         if (companyRequest.getWebsite() == null) {
             company.setName(companyRequest.getName());
         }
