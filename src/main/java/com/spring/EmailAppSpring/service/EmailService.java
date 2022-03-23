@@ -52,28 +52,28 @@ public class EmailService {
     }
 
     public Department addDepartment(UUID companyId, DepartmentRequest departmentRequest) {
-        final var company = companyRepository.findById(companyId).orElseThrow(() -> new IdNotFoundException());
+        final var company = companyRepository.findById(companyId).orElseThrow(() -> new IdNotFoundException(companyId));
         final var department = new Department(departmentRequest.getName(), departmentRequest.getBudget(), company);
             departmentRepository.save(department);
             return department;
     }
 
     public Manager addManager(UUID departmentId, ManagerRequest managerRequest) {
-        final var department = departmentRepository.findById(departmentId).orElseThrow(() -> new IdNotFoundException());
+        final var department = departmentRepository.findById(departmentId).orElseThrow(() -> new IdNotFoundException(departmentId));
         final var manager = new Manager(managerRequest.getFirstName(), managerRequest.getLastName(), department);
             managerRepository.save(manager);
             return manager;
     }
 
     public Employee addEmployee(UUID managerId, EmployeeRequest employeeRequest) {
-        final var manager = managerRepository.findById(managerId).orElseThrow(() -> new IdNotFoundException());
+        final var manager = managerRepository.findById(managerId).orElseThrow(() -> new IdNotFoundException(managerId));
         final var employee = new Employee(employeeRequest.getFirstName(), employeeRequest.getLastName());
             employeeRepository.save(employee);
             return employee;
     }
 
     public Company patchCompany(UUID companyId, CompanyRequest companyRequest) {
-        final var company = companyRepository.findById(companyId).orElseThrow(() -> new IdNotFoundException());
+        final var company = companyRepository.findById(companyId).orElseThrow(() -> new IdNotFoundException(companyId));
         if (companyRequest.getWebsite() == null) {
             company.setName(companyRequest.getName());
         }
