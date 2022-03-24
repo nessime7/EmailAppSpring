@@ -56,8 +56,8 @@ public class EmailIntegrationTest {
                 .body(TestUtils.getRequestBodyFromFile("request/add-new-company-request.json", CONTEXT))
                 .when().post("/companies")
                 .then()
-                .and().body("name", is("Company"))
-                .and().body("website", is("company.com"));
+                .and().body("name", is("TestCompany"))
+                .and().body("website", is("test-company.com"));
     }
 
     @Test
@@ -134,7 +134,7 @@ public class EmailIntegrationTest {
         var companyId = "ab391196-93dd-11ec-b909-0242ac120002";
         given().contentType(ContentType.JSON)
                 .body(TestUtils.getRequestBodyFromFile("request/add-new-department-request.json", CONTEXT))
-                .when().put( String.format("/companies/%s", companyId))
+                .when().patch( String.format("/companies/%s", companyId))
                 .then()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
     }
