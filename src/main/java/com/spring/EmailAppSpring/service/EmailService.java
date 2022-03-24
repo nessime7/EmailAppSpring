@@ -1,103 +1,167 @@
 package com.spring.EmailAppSpring.service;
 
+import com.spring.EmailAppSpring.config.IdNotFoundException;
 import com.spring.EmailAppSpring.model.*;
-import com.spring.EmailAppSpring.storage.EmailAppRepository;
+import com.spring.EmailAppSpring.repository.CompanyRepository;
+import com.spring.EmailAppSpring.repository.DepartmentRepository;
+import com.spring.EmailAppSpring.repository.EmployeeRepository;
+import com.spring.EmailAppSpring.repository.ManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class EmailService {
 
-    private final EmailAppRepository repository;
+    private final CompanyRepository companyRepository;
+    private final DepartmentRepository departmentRepository;
+    private final ManagerRepository managerRepository;
+    private final EmployeeRepository employeeRepository;
 
     @Autowired
-    public EmailService(EmailAppRepository repository) {
-        this.repository = repository;
+    public EmailService(CompanyRepository companyRepository, DepartmentRepository departmentRepository, ManagerRepository managerRepository, EmployeeRepository employeeRepository) {
+        this.companyRepository = companyRepository;
+        this.departmentRepository = departmentRepository;
+        this.managerRepository = managerRepository;
+        this.employeeRepository = employeeRepository;
+    }
+
+    public List<Company> getAllCompanies() {
+        return companyRepository.findAll();
+    }
+
+    public Optional<Company> getCompany(UUID companyId) {
+        return companyRepository.findById(companyId);
+    }
+
+    public Optional<Department> getDepartment(UUID departmentId) {
+        return departmentRepository.findById(departmentId);
+    }
+
+    public Optional<Manager> getManager(UUID managerId) {
+        return managerRepository.findById(managerId);
     }
 
     public Company addCompany(CompanyRequest companyRequest) {
-        final var company = new Company(UUID.randomUUID(), companyRequest.getName(), companyRequest.getWebsite());
-
-        repository.getCompanies().add(company);
-        return company;
+        final var company = new Company(companyRequest.getName(), companyRequest.getWebsite());
+        companyRepository.save(company);
+            return company;
     }
 
-    public Company putDepartment(UUID companyId, DepartmentRequest departmentRequest) {
-        final var department = new Department(UUID.randomUUID(), departmentRequest.getName(), departmentRequest.getBudget());
-
-//        return repository.getCompanies().stream()
-//                .filter(company -> company.getCompanyId().equals(companyId))
-//                .peek(company -> company.addDepartment(department))
-//                .findFirst()
-//                .orElseThrow();
-
-        for (Company company: repository.getCompanies()) {
-            if (company.getCompanyId().equals(companyId)){
-                company.addDepartment(department);
-                return company;
-            }
-        }
-        throw new IllegalStateException();
+    public Department addDepartment(UUID companyId, DepartmentRequest departmentRequest) {
+        final var company = companyRepository.findById(companyId).orElseThrow(() -> new IdNotFoundException(companyId));
+        final var department = new Department(departmentRequest.getName(), departmentRequest.getBudget(), company);
+            departmentRepository.save(department);
+            return department;
     }
 
-
-
-    public Department putManager(UUID companyId, UUID departmentId, ManagerRequest managerRequest) {
-        final var manager = new Manager(UUID.randomUUID(), managerRequest.getFirstName(), managerRequest.getLastName());
-
-        return repository.getCompanies().stream()
-                .filter(company -> company.getCompanyId().equals(companyId))
-                .flatMap(department -> department.getDepartments().stream())
-                .filter(department -> department.getDepartmentId().equals(departmentId))
-                .peek(department -> department.addManager(manager))
-                .findFirst()
-                .orElseThrow();
+    public Manager addManager(UUID departmentId, ManagerRequest managerRequest) {
+        final var department = departmentRepository.findById(departmentId).orElseThrow(() -> new IdNotFoundException(departmentId));
+        final var manager = new Manager(managerRequest.getFirstName(), managerRequest.getLastName(), department);
+            managerRepository.save(manager);
+            return manager;
     }
 
-    public Manager putEmployee(UUID companyId, UUID departmentId, UUID managerId, EmployeeRequest employeeRequest) {
+    public Employee addEmployee(UUID managerId, EmployeeRequest employeeRequest) {
+        final var manager = managerRepository.findById(managerId).orElseThrow(() -> new IdNotFoundException(managerId));
         final var employee = new Employee(employeeRequest.getFirstName(), employeeRequest.getLastName());
-
-        return repository.getCompanies().stream()
-                .filter(company -> company.getCompanyId().equals(companyId))
-                .flatMap(department -> department.getDepartments().stream())
-                .filter(department -> department.getDepartmentId().equals(departmentId))
-                .flatMap(manager -> manager.getManagers().stream())
-                .filter(manager -> manager.getManagerId().equals(managerId))
-                .peek(addEmployee -> addEmployee.addEmployee(employee))
-                .findFirst()
-                .orElseThrow();
+            employeeRepository.save(employee);
+            return employee;
     }
 
-    public Company getAllCompanies(UUID companyId) {
-        return repository.getCompanies().stream()
-                .filter(company -> company.getCompanyId().equals(companyId))
-                .findFirst()
-                .orElseThrow();
+    public Company patchCompany(UUID companyId, CompanyRequest companyRequest) {
+        final var company = companyRepository.findById(companyId).orElseThrow(() -> new IdNotFoundException(companyId));
+        if (companyRequest.getWebsite() == null) {
+            company.setName(companyRequest.getName());
+        }
+        else if (companyRequest.getName() == null) {
+            company.setWebsite(companyRequest.getWebsite());
+        }
+        else if (companyRequest.getName() == null && companyRequest.getWebsite() == null) {
+            System.out.println("Brak danych!");
+        }
+        else {
+            company.setName(companyRequest.getName());
+            company.setWebsite(companyRequest.getWebsite());
+        }
+        return companyRepository.save(company);
     }
 
-    public Set<Company> getCompany() {
-        return repository.getCompanies();
+    public Department patchDepartment(UUID departmentId, DepartmentRequest departmentRequest) {
+        final var department = departmentRepository.findById(departmentId).get();
+        if (departmentRequest.getBudget() == 0) {
+            department.setName(departmentRequest.getName());
+        }
+        else if (departmentRequest.getName() == null) {
+            department.setBudget(department.getBudget());
+        }
+        else if (departmentRequest.getName() == null && departmentRequest.getBudget() == 0) {
+            System.out.println("Brak danych!");
+        }
+        else {
+            department.setName(departmentRequest.getName());
+            department.setBudget(departmentRequest.getBudget());
+        }
+        return departmentRepository.save(department);
     }
 
-    public void getDepartment(UUID companyId, UUID departmentId) {
-        repository.getCompanies().stream()
-                .filter(company -> company.getCompanyId().equals(companyId))
-                .flatMap(department -> department.getDepartments().stream())
-                .filter(department -> department.getDepartmentId().equals(departmentId))
-                .forEach(System.out::println);
+    public Manager patchManager(UUID managerId, ManagerRequest managerRequest) {
+        final var manager = managerRepository.findById(managerId).get();
+        if (managerRequest.getLastName() == null) {
+            manager.setFirstName(managerRequest.getFirstName());
+        }
+        else if (managerRequest.getFirstName() == null) {
+            manager.setLastName(managerRequest.getLastName());
+        }
+        else if (managerRequest.getFirstName() == null && managerRequest.getLastName() == null) {
+            System.out.println("Brak danych!");
+        }
+        else {
+            manager.setFirstName(managerRequest.getFirstName());
+            manager.setLastName(managerRequest.getLastName());
+        }
+        return managerRepository.save(manager);
     }
 
-    public void getManager(UUID companyId, UUID departmentId, UUID managerId) {
-        repository.getCompanies().stream()
-                .filter(company -> company.getCompanyId().equals(companyId))
-                .flatMap(department -> department.getDepartments().stream())
-                .filter(department -> department.getDepartmentId().equals(departmentId))
-                .flatMap(department -> department.getManagers().stream())
-                .filter(department -> department.getManagerId().equals(managerId))
-                .forEach(System.out::println);
+    public Employee patchEmployee(UUID employeeId, EmployeeRequest employeeRequest) {
+        final var employee = employeeRepository.findById(employeeId).get();
+        if (employeeRequest.getLastName() == null) {
+            employee.setFirstName(employeeRequest.getFirstName());
+        }
+        else if (employeeRequest.getFirstName() == null) {
+            employee.setLastName(employeeRequest.getLastName());
+        }
+        else if (employeeRequest.getFirstName() == null && employeeRequest.getLastName() == null) {
+            System.out.println("Brak danych!");
+        }
+        else {
+            employee.setFirstName(employeeRequest.getFirstName());
+            employee.setLastName(employeeRequest.getLastName());
+        }
+        return employeeRepository.save(employee);
+    }
+
+    public void deleteCompany(UUID companyId) {
+        final var company = companyRepository.findById(companyId).get();
+        companyRepository.delete(company);
+    }
+
+    public void deleteDepartment(UUID departmentId) {
+        final var department = departmentRepository.findById(departmentId).get();
+        departmentRepository.delete(department);
+    }
+
+    public void deleteManager(UUID managerId) {
+        final var manager = managerRepository.findById(managerId).get();
+        managerRepository.delete(manager);
+    }
+
+    public void deleteEmployee(UUID employeeId) {
+        final var employee = employeeRepository.findById(employeeId).get();
+        employeeRepository.delete(employee);
     }
 
     public String generateMail(String firstName, String lastName) {

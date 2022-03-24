@@ -1,73 +1,35 @@
 package com.spring.EmailAppSpring.model;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import java.util.UUID;
 
-public class Manager extends Employee {
+@Data
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "manager")
+public class Manager {
 
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @Column(name = "id", nullable = false)
     private UUID managerId;
-    public Set<Employee> employees = new HashSet<>();
 
-    public Manager(UUID managerId, String firstName, String lastName, Email email, Set<Employee> employees) {
-        super(firstName, lastName, email);
-        this.managerId = managerId;
-        this.employees = employees;
-    }
+    private String firstName;
 
-    public Manager(UUID managerId, String firstName, String lastName) {
-        super(firstName, lastName);
-        this.managerId = managerId;
-    }
+    private String lastName;
 
-    public UUID getManagerId() {
-        return managerId;
-    }
+    @ManyToOne
+    private Department department;
 
-    public void setManagerId(UUID managerId) {
-        this.managerId = managerId;
-    }
-
-    public Manager(Set<Employee> employees) {
-        this.employees = employees;
-    }
-
-    public Set<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(Set<Employee> employees) {
-        this.employees = employees;
-    }
-
-    public void addEmployee(Employee employee) {
-        if (this.employees != null) {
-            this.employees.add(employee);
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "Manager{" +
-                "managerId=" + managerId +
-                ", " + super.toString() +
-                ", employees=" + employees +
-                "}";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Manager manager = (Manager) o;
-        return Objects.equals(managerId, manager.managerId) && Objects.equals(employees, manager.employees);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), managerId, employees);
+    public Manager(String firstName, String lastName, Department department) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.department = department;
     }
 
 }
