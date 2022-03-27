@@ -2,8 +2,8 @@ CREATE SCHEMA IF NOT EXISTS emailapp;
 
 CREATE TABLE IF NOT EXISTS emailapp.company (
 	id uuid NOT NULL,
-	name varchar(255),
-	website varchar(255),
+	name character varying(255),
+	website character varying(255),
 	CONSTRAINT company_pkey PRIMARY KEY (id)
 );
 
