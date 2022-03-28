@@ -31,15 +31,14 @@ public class EmailIntegrationTest {
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
-    //fix
     @Test
     public void should_return_companies() {
         given()
             .when().get("/companies")
             .then()
-            .statusCode(HttpStatus.SC_OK);
-//            .and().body("name", is("Krzak"))
-//            .and().body("website", is("krzak.com"));
+            .statusCode(HttpStatus.SC_OK)
+            .and().body("name", hasItem("Krzak"))
+            .and().body("website", hasItem("krzak.com"));
     }
 
     @Test
