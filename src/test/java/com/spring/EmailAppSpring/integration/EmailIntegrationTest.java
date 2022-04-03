@@ -32,13 +32,13 @@ public class EmailIntegrationTest {
     }
 
     @Test
-    public void should_return_companies() throws IOException {
+    public void should_return_companies() {
         given()
             .when().get("/companies")
             .then()
             .statusCode(HttpStatus.SC_OK)
-            .and().body("", equalTo(TestUtils.getPath("response/companies-response.json", CONTEXT)
-                        .getList("")));
+            .and().body("name", hasItem("Krzak"))
+            .and().body("website", hasItem("krzak.com"));
     }
 
     @Test
@@ -50,91 +50,106 @@ public class EmailIntegrationTest {
                 .statusCode(HttpStatus.SC_OK);
     }
 
+
     @Test
     public void should_add_new_company_and_compare() throws IOException {
         given().contentType(ContentType.JSON)
                 .body(TestUtils.getRequestBodyFromFile("request/add-new-company-request.json", CONTEXT))
                 .when().post("/companies")
                 .then()
-                .and().body("name", is("Company"))
-                .and().body("website", is("company.com"));
+                .and().body("name", is("TestCompany"))
+                .and().body("website", is("test-company.com"));
     }
 
     @Test
     public void should_add_new_department() throws IOException {
-        var companyId = "b7049455-e4b4-42ba-889d-a3d08e9c0eca";
+        var companyId = "e1649538-a17f-11ec-b909-0242ac120002";
         given().contentType(ContentType.JSON)
                 .body(TestUtils.getRequestBodyFromFile("request/add-new-department-request.json", CONTEXT))
-                .when().put( String.format("/companies/%s", companyId))
+                .when().post( String.format("/departments/%s", companyId))
                 .then()
                 .statusCode(HttpStatus.SC_OK);
     }
 
     @Test
     public void should_add_new_department_and_compare() throws IOException {
-        var companyId = "b7049455-e4b4-42ba-889d-a3d08e9c0eca";
+        var companyId = "e1649538-a17f-11ec-b909-0242ac120002";
         given().contentType(ContentType.JSON)
                 .body(TestUtils.getRequestBodyFromFile("request/add-new-department-request.json", CONTEXT))
-                .when().put(String.format("/companies/%s", companyId))
+                .when().post(String.format("/departments/%s", companyId))
                 .then()
-                .and().body("departments.name", hasItem("TestDepartment"))
-                .and().body("departments.budget", hasItem(99999));
+                .and().body("name", is("TestDepartment"))
+                .and().body("budget", is(99999));
+    }
+
+    @Test
+    public void should_not_add_new_department_and_return_404() throws IOException {
+        var companyId = "ab391196-93dd-11ec-b909-0242ac120002";
+        given().contentType(ContentType.JSON)
+                .body(TestUtils.getRequestBodyFromFile("request/add-new-department-request.json", CONTEXT))
+                .when().patch( String.format("/companies/%s", companyId))
+                .then()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Test
     public void should_add_new_manager() throws IOException {
-        var companyId = "b7049455-e4b4-42ba-889d-a3d08e9c0eca";
-        var departmentId = "b48b862e-6a85-11ec-90d6-0242ac120003";
+        var departmentId = "e1649a06-a17f-11ec-b909-0242ac120002";
         given().contentType(ContentType.JSON)
                 .body(TestUtils.getRequestBodyFromFile("request/add-new-manager-request.json", CONTEXT))
-                .when().put(String.format("/companies/%s/%s", companyId, departmentId))
+                .when().post(String.format("/managers/%s", departmentId))
                 .then()
                 .statusCode(HttpStatus.SC_OK);
     }
 
     @Test
     public void should_add_new_manager_and_compare() throws IOException {
-        var companyId = "b7049455-e4b4-42ba-889d-a3d08e9c0eca";
-        var departmentId = "b48b862e-6a85-11ec-90d6-0242ac120003";
+        var departmentId = "e1649a06-a17f-11ec-b909-0242ac120002";
         given().contentType(ContentType.JSON)
                 .body(TestUtils.getRequestBodyFromFile("request/add-new-manager-request.json", CONTEXT))
-                .when().put(String.format("/companies/%s/%s", companyId, departmentId))
+                .when().post(String.format("/managers/%s", departmentId))
                 .then()
-                .and().body("managers.firstName", hasItem("Jan"))
-                .and().body("managers.lastName", hasItem("Kowalski"));
+                .and().body("firstName", is("Jan"))
+                .and().body("lastName", is("Kowalski"));
+    }
+
+    @Test
+    public void should_not_add_new_manager_and_return_404() throws IOException {
+        var departmentId = "e955625a-adc2-11ec-b909-0242ac120002";
+        given().contentType(ContentType.JSON)
+                .body(TestUtils.getRequestBodyFromFile("request/add-new-manager-request.json", CONTEXT))
+                .when().post(String.format("managers/%s", departmentId))
+                .then()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Test
     public void should_add_new_employee() throws IOException {
-        var companyId = "b7049455-e4b4-42ba-889d-a3d08e9c0eca";
-        var departmentId = "b48b862e-6a85-11ec-90d6-0242ac120003";
-        var managerId = "1c0d10a6-6b03-11ec-90d6-0242ac120003";
+        var managerId = "e164a294-a17f-11ec-b909-0242ac120002";
         given().contentType(ContentType.JSON)
                 .body(TestUtils.getRequestBodyFromFile("request/add-new-employee-request.json", CONTEXT))
-                .when().put(String.format("/companies/%s/%s/%s", companyId, departmentId, managerId))
+                .when().post(String.format("/employees/%s", managerId))
                 .then()
                 .statusCode(HttpStatus.SC_OK);
     }
 
     @Test
     public void should_add_new_employee_and_compare() throws IOException {
-        var companyId = "b7049455-e4b4-42ba-889d-a3d08e9c0eca";
-        var departmentId = "b48b862e-6a85-11ec-90d6-0242ac120003";
-        var managerId = "1c0d10a6-6b03-11ec-90d6-0242ac120003";
+        var managerId = "e164a294-a17f-11ec-b909-0242ac120002";
         given().contentType(ContentType.JSON)
                 .body(TestUtils.getRequestBodyFromFile("request/add-new-employee-request.json", CONTEXT))
-                .when().put(String.format("/companies/%s/%s/%s", companyId, departmentId, managerId))
+                .when().post(String.format("/employees/%s", managerId))
                 .then()
-                .and().body("employees.firstName", hasItem("Stefan"))
-                .and().body("employees.lastName", hasItem("Nowak"));
+                .and().body("firstName", is("Stefan"))
+                .and().body("lastName", is("Nowak"));
     }
 
     @Test
-    public void should_add_new_department_and_return_404() throws IOException {
-        var companyId = "ab391196-93dd-11ec-b909-0242ac120002";
+    public void should_not_add_new_employee_and_return_404() throws IOException {
+        var managerId = "2fd55f12-adc5-11ec-b909-0242ac120002";
         given().contentType(ContentType.JSON)
-                .body(TestUtils.getRequestBodyFromFile("request/add-new-department-request.json", CONTEXT))
-                .when().put( String.format("/companies/%s", companyId))
+                .body(TestUtils.getRequestBodyFromFile("request/add-new-employee-request.json", CONTEXT))
+                .when().post(String.format("/employees/%s", managerId))
                 .then()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
     }
