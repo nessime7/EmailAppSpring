@@ -4,14 +4,27 @@ plugins {
 	id 'java'
 	id "io.freefair.lombok" version "6.4.1"
 	id "org.flywaydb.flyway" version "7.2.1"
+	id "com.palantir.docker" version "0.20.1"
 }
 
 group = 'com.spring'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
+springBoot {
+	mainClass = 'com.wro.emailapp.EmailAppSpringApplication'
+}
+
 repositories {
 	mavenCentral()
+}
+
+bootJar {
+	enabled = false
+}
+
+jar {
+	enabled = true
 }
 
 jar {
@@ -28,6 +41,7 @@ task fatJar(type: Jar) {
 
 	manifest.from jar.manifest
 	classifier = 'all'
+	//archiveName = "emailapp.jar"
 	from {
 		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
 	} {
@@ -40,6 +54,11 @@ task fatJar(type: Jar) {
 
 artifacts {
 	archives fatJar
+}
+
+docker {
+	files fatJar.outputs
+	copySpec.into("build/libs")
 }
 
 dependencies {
