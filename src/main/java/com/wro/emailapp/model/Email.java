@@ -18,11 +18,8 @@ public class Email {
     @GeneratedValue(generator = "UUID")
     @Column(name = "id", nullable = false)
     private UUID id;
-
     @Column(name = "login", nullable = false)
     private String login;
-
     @Column(name = "password", nullable = false)
     private String password;
-
 }

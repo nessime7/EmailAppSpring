@@ -18,11 +18,8 @@ public class Department {
     @GeneratedValue(generator = "UUID")
     @Column(name = "id", nullable = false)
     private UUID id;
-
     private String name;
-
     private int budget;
-
     @ManyToOne
     private Company company;
 
@@ -31,5 +28,4 @@ public class Department {
         this.budget = budget;
         this.company = company;
     }
-
 }

@@ -7,5 +7,4 @@ public class IdNotFoundException extends RuntimeException {
     public IdNotFoundException(UUID id) {
         super(id + " not found!");
     }
-
 }

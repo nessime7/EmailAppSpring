@@ -25,6 +25,5 @@ public class Company {
         this.name = name;
         this.website = website;
     }
-
 }
 

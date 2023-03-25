@@ -18,11 +18,8 @@ public class Employee {
     @GeneratedValue(generator = "UUID")
     @Column(name = "id", nullable = false)
     private UUID id;
-
     private String firstName;
-
     private String lastName;
-
     @ManyToOne
     private Manager manager;
 
@@ -30,5 +27,4 @@ public class Employee {
         this.firstName = firstName;
         this.lastName = lastName;
     }
-
 }

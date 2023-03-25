@@ -99,5 +99,4 @@ public class EmailAppController {
     public void deleteEmployee(@PathVariable ("employeeId") UUID employeeId) {
         emailService.deleteEmployee(employeeId);
     }
-
 }

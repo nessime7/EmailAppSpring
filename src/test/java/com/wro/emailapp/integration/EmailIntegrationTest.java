@@ -153,5 +153,4 @@ public class EmailIntegrationTest {
                 .then()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
     }
-
 }

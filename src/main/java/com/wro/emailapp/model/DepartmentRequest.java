@@ -28,7 +28,6 @@ public class DepartmentRequest {
         this.budget = budget;
     }
 
-
     @Override
     public String toString() {
         return "DepartmentRequest{" +

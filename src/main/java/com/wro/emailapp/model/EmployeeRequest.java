@@ -7,7 +7,6 @@ public class EmployeeRequest {
     private String firstName;
     private String lastName;
 
-
     public EmployeeRequest(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -49,5 +48,4 @@ public class EmployeeRequest {
     public int hashCode() {
         return Objects.hash(firstName, lastName);
     }
-
 }

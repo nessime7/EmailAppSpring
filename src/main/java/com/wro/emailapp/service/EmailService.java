@@ -171,5 +171,4 @@ public class EmailService {
     public String generatePassword() {
         return UUID.randomUUID().toString();
     }
-
 }
